@@ -1,0 +1,475 @@
+﻿install.packages("tidyverse")
+install.packages("plotly")
+library(readr)
+library(ggplot2)
+library(tidyr)
+library(plotly)
+#Read in the data
+AUTO <- read_csv("Auto.csv")
+TEXTILES <- read_csv("Textiles.csv")
+OIL <- read_csv("Oil UPST.csv")
+################################################################################
+
+
+#Modular linear regression functions need 13, for each firm
+#event window -4,-3,-2,-1,0,1,2,3,4,5,6,7,8,9,10 (15 days)
+
+
+get_reg1 <- function(x) lm(RET-rf ~ mktrf + smb + hml, data=x, subset = c(1:120))
+get_reg2 <- function(x) lm(RET-rf ~ mktrf + smb + hml, data=x, subset = c(136:255))
+get_reg3 <- function(x) lm(RET-rf ~ mktrf + smb + hml, data=x, subset = c(271:390))
+get_reg4 <- function(x) lm(RET-rf ~ mktrf + smb + hml, data=x, subset = c(406:525))
+get_reg5 <- function(x) lm(RET-rf ~ mktrf + smb + hml, data=x, subset = c(541:660))
+get_reg6 <- function(x) lm(RET-rf ~ mktrf + smb + hml, data=x, subset = c(676:795))
+get_reg7 <- function(x) lm(RET-rf ~ mktrf + smb + hml, data=x, subset = c(811:930))
+get_reg8 <- function(x) lm(RET-rf ~ mktrf + smb + hml, data=x, subset = c(946:1065))
+get_reg9 <- function(x) lm(RET-rf ~ mktrf + smb + hml, data=x, subset = c(1081:1200))
+get_reg10 <- function(x) lm(RET-rf ~ mktrf + smb + hml, data=x, subset = c(1216:1335))
+get_reg11 <- function(x) lm(RET-rf ~ mktrf + smb + hml, data=x, subset = c(1351:1470))
+get_reg12 <- function(x) lm(RET-rf~ mktrf + smb + hml, data=x, subset = c(1486:1605))
+get_reg13 <- function(x) lm(RET-rf~ mktrf + smb + hml, data=x, subset = c(1621:1740))
+
+
+################################################################################
+#regs for auto
+auto1 <- get_reg1(AUTO)
+auto2 <- get_reg2(AUTO)
+auto3 <- get_reg3(AUTO)
+auto4 <- get_reg4(AUTO)
+auto5 <- get_reg5(AUTO)
+auto6 <- get_reg6(AUTO)
+auto7 <- get_reg7(AUTO)
+auto8 <- get_reg8(AUTO)
+auto9 <- get_reg9(AUTO)
+auto10 <- get_reg10(AUTO)
+auto11 <- get_reg11(AUTO)
+auto12 <- get_reg12(AUTO)
+auto13 <- get_reg13(AUTO)
+
+
+#regs for textiles
+text1 <- get_reg1(TEXTILES)
+text2 <- get_reg2(TEXTILES)
+text3 <- get_reg3(TEXTILES)
+text4 <- get_reg4(TEXTILES)
+text5 <- get_reg5(TEXTILES)
+text6 <- get_reg6(TEXTILES)
+text7 <- get_reg7(TEXTILES)
+text8 <- get_reg8(TEXTILES)
+text9 <- get_reg9(TEXTILES)
+text10 <- get_reg10(TEXTILES)
+text11 <- get_reg11(TEXTILES)
+text12 <- get_reg12(TEXTILES)
+text13 <- get_reg13(TEXTILES)
+
+
+#regs for oil
+oil1 <- get_reg1(OIL)
+oil2 <- get_reg2(OIL)
+oil3 <- get_reg3(OIL)
+oil4 <- get_reg4(OIL)
+oil5 <- get_reg5(OIL)
+oil6 <- get_reg6(OIL)
+oil7 <- get_reg7(OIL)
+oil8 <- get_reg8(OIL)
+oil9 <- get_reg9(OIL)
+oil10 <- get_reg10(OIL)
+oil11 <- get_reg11(OIL)
+oil12 <- get_reg12(OIL)
+oil13 <- get_reg13(OIL)
+################################################################################
+#Modular prediction functions need 13, for each firm
+
+
+#arguments take a regresssion (x) and a dataset (y)
+predictionfx1 <- function(x,y) predict.lm(x, as.data.frame(y[c(121:135),c(4:7)]))
+predictionfx2 <- function(x,y) predict.lm(x, as.data.frame(y[c(256:270),c(4:7)]))
+predictionfx3 <- function(x,y) predict.lm(x, as.data.frame(y[c(391:405),c(4:7)]))
+predictionfx4 <- function(x,y) predict.lm(x, as.data.frame(y[c(526:540),c(4:7)]))
+predictionfx5 <- function(x,y) predict.lm(x, as.data.frame(y[c(661:675),c(4:7)]))
+predictionfx6 <- function(x,y) predict.lm(x, as.data.frame(y[c(796:810),c(4:7)]))
+predictionfx7 <- function(x,y) predict.lm(x, as.data.frame(y[c(931:945),c(4:7)]))
+predictionfx8 <- function(x,y) predict.lm(x, as.data.frame(y[c(1066:1080),c(4:7)]))
+predictionfx9 <- function(x,y) predict.lm(x, as.data.frame(y[c(1201:1215),c(4:7)]))
+predictionfx10 <- function(x,y) predict.lm(x, as.data.frame(y[c(1336:1350),c(4:7)]))
+predictionfx11 <- function(x,y) predict.lm(x, as.data.frame(y[c(1471:1485),c(4:7)]))
+predictionfx12 <- function(x,y) predict.lm(x, as.data.frame(y[c(1606:1620),c(4:7)]))
+predictionfx13 <- function(x,y) predict.lm(x, as.data.frame(y[c(1741:1755),c(4:7)]))
+
+
+#predictions for auto
+predauto1 <- predictionfx1(auto1, AUTO)
+predauto2 <- predictionfx2(auto2, AUTO)
+predauto3 <- predictionfx3(auto3, AUTO)
+predauto4 <- predictionfx4(auto4, AUTO)
+predauto5 <- predictionfx5(auto5, AUTO)
+predauto6 <- predictionfx6(auto6, AUTO)
+predauto7 <- predictionfx7(auto7, AUTO)
+predauto8 <- predictionfx8(auto8, AUTO)
+predauto9 <- predictionfx9(auto9, AUTO)
+predauto10 <- predictionfx10(auto10, AUTO)
+predauto11 <- predictionfx11(auto11, AUTO)
+predauto12 <- predictionfx12(auto12, AUTO)
+predauto13 <- predictionfx13(auto13, AUTO)
+
+
+#predictions for textiles
+predtext1 <- predictionfx1(text1, TEXTILES)
+predtext2 <- predictionfx2(text2, TEXTILES)
+predtext3 <- predictionfx3(text3, TEXTILES)
+predtext4 <- predictionfx4(text4, TEXTILES)
+predtext5 <- predictionfx5(text5, TEXTILES)
+predtext6 <- predictionfx6(text6, TEXTILES)
+predtext7 <- predictionfx7(text7, TEXTILES)
+predtext8 <- predictionfx8(text8, TEXTILES)
+predtext9 <- predictionfx9(text9, TEXTILES)
+predtext10 <- predictionfx10(text10, TEXTILES)
+predtext11 <- predictionfx11(text11, TEXTILES)
+predtext12 <- predictionfx12(text12, TEXTILES)
+predtext13 <- predictionfx13(text13, TEXTILES)
+
+
+#predictions for oil
+predoil1 <- predictionfx1(oil1, OIL)
+predoil2 <- predictionfx2(oil2, OIL)
+predoil3 <- predictionfx3(oil3, OIL)
+predoil4 <- predictionfx4(oil4, OIL)
+predoil5 <- predictionfx5(oil5, OIL)
+predoil6 <- predictionfx6(oil6, OIL)
+predoil7 <- predictionfx7(oil7, OIL)
+predoil8 <- predictionfx8(oil8, OIL)
+predoil9 <- predictionfx9(oil9, OIL)
+predoil10 <- predictionfx10(oil10, OIL)
+predoil11 <- predictionfx11(oil11, OIL)
+predoil12 <- predictionfx12(oil12, OIL)
+predoil13 <- predictionfx13(oil13, OIL)
+################################################################################
+#remove intercepts from predictions
+
+
+#predictions for auto
+pauto1 <- sapply(predauto1, function(x) x-auto1[["coefficients"]][["(Intercept)"]])
+pauto2 <- sapply(predauto2, function(x) x-auto2[["coefficients"]][["(Intercept)"]])
+pauto3 <- sapply(predauto3, function(x) x-auto3[["coefficients"]][["(Intercept)"]])
+pauto4 <- sapply(predauto4, function(x) x-auto4[["coefficients"]][["(Intercept)"]])
+pauto5 <- sapply(predauto5, function(x) x-auto5[["coefficients"]][["(Intercept)"]])
+pauto6 <- sapply(predauto6, function(x) x-auto6[["coefficients"]][["(Intercept)"]])
+pauto7 <- sapply(predauto7, function(x) x-auto7[["coefficients"]][["(Intercept)"]])
+pauto8 <- sapply(predauto8, function(x) x-auto8[["coefficients"]][["(Intercept)"]])
+pauto9 <- sapply(predauto9, function(x) x-auto9[["coefficients"]][["(Intercept)"]])
+pauto10 <- sapply(predauto10, function(x) x-auto10[["coefficients"]][["(Intercept)"]])
+pauto11 <- sapply(predauto11, function(x) x-auto11[["coefficients"]][["(Intercept)"]])
+pauto12 <- sapply(predauto12, function(x) x-auto12[["coefficients"]][["(Intercept)"]])
+pauto13 <- sapply(predauto13, function(x) x-auto13[["coefficients"]][["(Intercept)"]])
+
+
+#predictions for textiles
+ptext1 <- sapply(predtext1, function(x) x-text1[["coefficients"]][["(Intercept)"]])
+ptext2 <- sapply(predtext2, function(x) x-text2[["coefficients"]][["(Intercept)"]])
+ptext3 <- sapply(predtext3, function(x) x-text3[["coefficients"]][["(Intercept)"]])
+ptext4 <- sapply(predtext4, function(x) x-text4[["coefficients"]][["(Intercept)"]])
+ptext5 <- sapply(predtext5, function(x) x-text5[["coefficients"]][["(Intercept)"]])
+ptext6 <- sapply(predtext6, function(x) x-text6[["coefficients"]][["(Intercept)"]])
+ptext7 <- sapply(predtext7, function(x) x-text7[["coefficients"]][["(Intercept)"]])
+ptext8 <- sapply(predtext8, function(x) x-text8[["coefficients"]][["(Intercept)"]])
+ptext9 <- sapply(predtext9, function(x) x-text9[["coefficients"]][["(Intercept)"]])
+ptext10 <- sapply(predtext10, function(x) x-text10[["coefficients"]][["(Intercept)"]])
+ptext11 <- sapply(predtext11, function(x) x-text11[["coefficients"]][["(Intercept)"]])
+ptext12 <- sapply(predtext12, function(x) x-text12[["coefficients"]][["(Intercept)"]])
+ptext13 <- sapply(predtext13, function(x) x-text13[["coefficients"]][["(Intercept)"]])
+
+
+#predictions for oil
+poil1 <- sapply(predoil1, function(x) x-oil1[["coefficients"]][["(Intercept)"]])
+poil2 <- sapply(predoil1, function(x) x-oil2[["coefficients"]][["(Intercept)"]])
+poil3 <- sapply(predoil1, function(x) x-oil3[["coefficients"]][["(Intercept)"]])
+poil4 <- sapply(predoil1, function(x) x-oil4[["coefficients"]][["(Intercept)"]])
+poil5 <- sapply(predoil1, function(x) x-oil5[["coefficients"]][["(Intercept)"]])
+poil6 <- sapply(predoil1, function(x) x-oil6[["coefficients"]][["(Intercept)"]])
+poil7 <- sapply(predoil1, function(x) x-oil7[["coefficients"]][["(Intercept)"]])
+poil8 <- sapply(predoil1, function(x) x-oil8[["coefficients"]][["(Intercept)"]])
+poil9 <- sapply(predoil1, function(x) x-oil9[["coefficients"]][["(Intercept)"]])
+poil10 <- sapply(predoil1, function(x) x-oil10[["coefficients"]][["(Intercept)"]])
+poil11 <- sapply(predoil1, function(x) x-oil11[["coefficients"]][["(Intercept)"]])
+poil12 <- sapply(predoil1, function(x) x-oil12[["coefficients"]][["(Intercept)"]])
+poil13 <- sapply(predoil1, function(x) x-oil13[["coefficients"]][["(Intercept)"]])
+################################################################################
+
+
+#obtain abnormal returns == actual - predicted
+#x is the dataset, y is the predicted value
+getab1 <- function(x,y) mapply('-', unlist(lapply(x[c(121:135),3], as.numeric)), y)
+getab2 <- function(x,y) mapply('-', unlist(lapply(x[c(256:270),3], as.numeric)), y)
+getab3 <- function(x,y) mapply('-', unlist(lapply(x[c(391:405),3], as.numeric)), y)
+getab4 <- function(x,y) mapply('-', unlist(lapply(x[c(526:540),3], as.numeric)), y)
+getab5 <- function(x,y) mapply('-', unlist(lapply(x[c(661:675),3], as.numeric)), y)
+getab6 <- function(x,y) mapply('-', unlist(lapply(x[c(796:810),3], as.numeric)), y)
+getab7 <- function(x,y) mapply('-', unlist(lapply(x[c(931:945),3], as.numeric)), y)
+getab8 <- function(x,y) mapply('-', unlist(lapply(x[c(1066:1080),3], as.numeric)), y)
+getab9 <- function(x,y) mapply('-', unlist(lapply(x[c(1201:1215),3], as.numeric)), y)
+getab10 <- function(x,y) mapply('-', unlist(lapply(x[c(1336:1350),3], as.numeric)), y)
+getab11 <- function(x,y) mapply('-', unlist(lapply(x[c(1471:1485),3], as.numeric)), y)
+getab12 <- function(x,y) mapply('-', unlist(lapply(x[c(1606:1620),3], as.numeric)), y)
+getab13 <- function(x,y) mapply('-', unlist(lapply(x[c(1741:1755),3], as.numeric)), y)
+
+
+#ab returns for auto
+abauto1 <- getab1(AUTO, pauto1)
+abauto2 <- getab2(AUTO, pauto2)
+abauto3 <- getab3(AUTO, pauto3)
+abauto4 <- getab4(AUTO, pauto4)
+abauto5 <- getab5(AUTO, pauto5)
+abauto6 <- getab6(AUTO, pauto6)
+abauto7 <- getab7(AUTO, pauto7)
+abauto8 <- getab8(AUTO, pauto8)
+abauto9 <- getab9(AUTO, pauto9)
+abauto10 <- getab10(AUTO, pauto10)
+abauto11 <- getab11(AUTO, pauto11)
+abauto12 <- getab12(AUTO, pauto12)
+abauto13 <- getab13(AUTO, pauto13)
+
+
+#ab returns for textiles
+abtext1 <- getab1(TEXTILES, ptext1)
+abtext2 <- getab2(TEXTILES, ptext2)
+abtext3 <- getab3(TEXTILES, ptext3)
+abtext4 <- getab4(TEXTILES, ptext4)
+abtext5 <- getab5(TEXTILES, ptext5)
+abtext6 <- getab6(TEXTILES, ptext6)
+abtext7 <- getab7(TEXTILES, ptext7)
+abtext8 <- getab8(TEXTILES, ptext8)
+abtext9 <- getab9(TEXTILES, ptext9)
+abtext10 <- getab10(TEXTILES, ptext10)
+abtext11 <- getab11(TEXTILES, ptext11)
+abtext12 <- getab12(TEXTILES, ptext12)
+abtext13 <- getab13(TEXTILES, ptext13)
+
+
+#ab returns for oil
+aboil1 <- getab1(OIL, poil1)
+aboil2 <- getab2(OIL, poil2)
+aboil3 <- getab3(OIL, poil3)
+aboil4 <- getab4(OIL, poil4)
+aboil5 <- getab5(OIL, poil5)
+aboil6 <- getab6(OIL, poil6)
+aboil7 <- getab7(OIL, poil7)
+aboil8 <- getab8(OIL, poil8)
+aboil9 <- getab9(OIL, poil9)
+aboil10 <- getab10(OIL, poil10)
+aboil11 <- getab11(OIL, poil11)
+aboil12 <- getab12(OIL, poil12)
+aboil13 <- getab13(OIL, poil13)
+###############################################################################
+
+
+#create dataframe for each industry
+
+
+#auto df
+ABautodf <- data.frame(abauto1, abauto2, abauto3, abauto4, abauto5, abauto6,
+                       abauto7, abauto8, abauto9, abauto10, abauto11, abauto12,
+                       abauto13)
+rownames(ABautodf) <- lapply(c(-4:10), toString)
+colnames(ABautodf) <- c("GM", 'APTV', 'F', 'HOG', 'STLA', 'TSLA', 'BWA', 'TTM',
+                        'GNTX', 'LEA', 'MG', 'TM', 'RACE')
+
+
+#textile df
+ABtextdf <- data.frame(abtext1, abtext2, abtext3, abtext4, abtext5, abtext6,
+                       abtext7, abtext8, abtext9, abtext10, abtext11, abtext12,
+                       abtext13)
+rownames(ABtextdf) <- lapply(c(-4:10), toString)
+colnames(ABtextdf) <- c('CPRI','PVH', 'VFC', 'NKE', 'DECK', 'RL', 'GIL', 'SKX',
+                        'TPR', 'CRI', 'UAA', 'HBI', 'LULU')
+
+
+#oil df
+ABoildf <- data.frame(aboil1, aboil2, aboil3, aboil4, aboil5, aboil6, aboil7,
+                      aboil8, aboil9, aboil10, aboil11, aboil12, aboil13)
+rownames(ABoildf) <- lapply(c(-4:10), toString)
+colnames(ABoildf) <- c('XOM', 'MTDR', 'FANG', 'COP', 'TPL', 'MRO', 'DEN', 'HES',
+                       'IMO', 'APA', 'PDCE', 'CNQ', 'PXD')
+
+
+
+
+###############################################################################
+
+
+#create df with AAR in each industry
+
+
+dfAARauto <- data.frame(rowSums(sapply(ABautodf[1:13], as.numeric))/13)
+dfAARtext <- data.frame(rowSums(sapply(ABtextdf[1:13], as.numeric))/13)
+dfAARoil <- data.frame(rowSums(sapply(ABoildf[1:13], as.numeric))/13)
+
+
+#create df with CAAR in each industry
+
+
+dfCAARauto <- data.frame(cumsum(dfAARauto))
+dfCAARtext <- data.frame(cumsum(dfAARtext))
+dfCAARoil <- data.frame(cumsum(dfAARoil))
+
+
+#AAR with CAAR
+
+
+dfAARCAARauto <- data.frame(dfAARauto, dfCAARauto)
+rownames(dfAARCAARauto) <- c(-4:10)
+colnames(dfAARCAARauto) <- c("AAR auto", "CAAR auto")
+
+
+dfAARCAARtext <- data.frame(dfAARtext, dfCAARtext)
+rownames(dfAARCAARtext) <- c(-4:10)
+colnames(dfAARCAARtext) <- c("AAR textiles", "CAAR textiles")
+
+
+dfAARCAARoil <- data.frame(dfAARoil, dfCAARoil)
+rownames(dfAARCAARoil) <- c(-4:10)
+colnames(dfAARCAARoil) <- c("AAR oil", "CAAR oil")
+
+
+#create dfCAAR all included
+
+
+dfCAAR <- data.frame(dfCAARauto, dfCAARtext, dfCAARoil)
+rownames(dfCAAR) <- lapply(c(-4:10), toString)
+colnames(dfCAAR) <- c('AUTO', 'TEXTILES', 'OIL')
+
+
+###############################################################################
+
+
+#obtain varCAAR's
+
+
+#varCAAR auto
+varCAARauto <- function(x) (x/116*13^2)*
+  sum(unlist(lapply(lapply(lapply(list(auto1, auto2, auto3, auto4, auto5,
+                                       auto6,auto7,auto8,auto9,auto10,auto11,
+                                       auto12,auto13), resid), function(x) x^2), sum)))
+
+
+#varCAAR text
+varCAARtext <- function(x) (x/116*13^2)*
+  sum(unlist(lapply(lapply(lapply(list(text1, text2, text3, text4, text5, text6,
+                                       text7,text8,text9,text10,text11,text12,
+                                       text3), resid), function(x) x^2), sum)))
+
+
+#varCAAR oil
+varCAARoil <- function(x) (x/116*13^2)*
+  sum(unlist(lapply(lapply(lapply(list(oil1, oil2, oil3, oil4, oil5, oil6, oil7,
+                                       oil8,oil9,oil10,oil11,oil12,oil13), 
+                                  resid), function(x) x^2), sum)))
+
+
+
+
+#obtain seCAAR's
+
+
+seCAARauto <- function(x) sqrt(varCAARauto(x))
+seCAARtext <- function(x) sqrt(varCAARtext(x))
+seCAARoil <- function(x) sqrt(varCAARoil(x))
+
+
+#seCAAR lists
+
+
+selistauto <- seCAARauto(1:15)
+selisttext <- seCAARtext(1:15)
+selistoil <- seCAARoil(1:15)
+
+
+#obtain t tests
+
+
+TCAARauto <- (dfCAAR[,1]-0)/selistauto
+TCAARtext <-(dfCAAR[,2]-0)/selisttext
+TcAARoil <-(dfCAAR[,3]-0)/selistoil
+
+
+#obtain p tests
+p_test_auto <- function(x) pt(TCAARauto[x], df=116)
+p_test_text <- function(x) pt(TCAARtext[x], df=116)
+p_test_oil <- function(x) pt(TcAARoil[x], df=116)
+###############################################################################
+
+
+#Normal returns (predicted)
+dfnrauto <- data.frame(pauto1, pauto2, pauto3, pauto4, pauto5, pauto6,
+                       pauto7, pauto8, pauto9, pauto10, pauto11, pauto12,
+                       pauto13)
+
+
+dfANRauto <- data.frame(rowSums(sapply(dfnrauto[1:13], as.numeric))/13)
+
+
+dfCANRauto <- data.frame(cumsum(dfANRauto))
+
+
+
+
+dfnrtext <- data.frame(ptext1, ptext2, ptext3, ptext4, ptext5, ptext6, ptext7,
+                       ptext8, ptext9, ptext10, ptext11, ptext12, ptext13)
+
+
+dfANRtext <- data.frame(rowSums(sapply(dfnrtext[1:13], as.numeric))/13)
+
+
+dfCANRtext <- data.frame(cumsum(dfANRtext))
+
+
+
+
+dfnroil <- data.frame(poil1, poil2, poil3, poil4, poil5, poil6, poil7, poil8,
+                      poil9, poil10, poil11, poil12, poil13)
+
+
+dfANRoil <- data.frame(rowSums(sapply(dfnroil[1:13], as.numeric))/13)
+
+
+dfCANRoil <- data.frame(cumsum(dfANRoil))
+###############################################################################
+#create final data frame
+
+
+dffinal <- data.frame(Date = -4:10,
+                      dfCAARauto, selistauto, TCAARauto, p_test_auto(1:15), p_test_auto(1:15)<0.05,
+                      dfCAARtext, selisttext, TCAARtext, p_test_text(1:15), p_test_text(1:15)<0.05,
+                      dfCAARoil, selistoil, TcAARoil, p_test_oil(1:15),  p_test_oil(1:15)<0.05)
+rownames(dffinal) <- lapply(c(-4:10), toString)
+colnames(dffinal) <- c('DATE', 'CAAR_auto', 'SE_auto', 'Tscore_auto', 'pval_auto', 'auto_alpha<0.05',
+                       'CAAR_textiles', 'SE_textiles', 'Tscore_textiles', 'pval_textiles', 'textiles_alpha<0.05',
+                       'CAAR_oil', 'SE_oil', 'Tscore_oil', 'pval_oil', 'oil_alpha<0.05')
+
+
+View(dffinal)
+
+
+number_ticks <- function(n) {function(limits) pretty(limits, n)}
+
+
+plotly::ggplotly(
+  dffinal %>%
+    ggplot(aes(x=DATE)) +
+    scale_x_continuous(breaks=number_ticks(20)) +
+    scale_color_manual(name = "", values = c('CAAR_auto' = '#DC4E40', 'CAAR_textiles' = '#25245D',
+                                             'CAAR_oil' = '#EFB156')) +
+    geom_point(aes(y=CAAR_auto), size = 0.5, colour = '#DC4E40', shape = 15,
+               stroke =2, fill = "#DC4E40") +
+    geom_point(aes(y=CAAR_textiles), size = 1.1, colour = '#25245D', shape = 16,
+               stroke =2, fill = "#25245D") +
+    geom_point(aes(y=CAAR_oil), size = 1, colour = '#EFB156', shape = 17,
+               stroke =2, fill = "#EFB156") +
+    geom_line(aes(y=CAAR_auto, colour = 'CAAR_auto'), lwd=1) +
+    geom_line(aes(y=CAAR_textiles, colour = 'CAAR_textiles'),lwd=1) +
+    geom_line(aes(y=CAAR_oil, colour = 'CAAR_oil'),lwd=1) +
+    labs(y = "CAAR",
+         x = "Event Date") +
+    geom_hline(yintercept=0, linetype='dotted', col = 'black') +
+    facet_wrap(~ variable) +
+    theme_classic()
+)
